@@ -1,0 +1,59 @@
+/* ######### CSS for Shade Tabs. Remove if not using ######### */
+
+.shadetabs {
+    font: bold 11px Verdana;
+    list-style-type: none;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-top: 1px;
+    padding: 1px 0;
+    text-align: left; /*set to left, center, or right to align the menu as desired*/
+}
+
+.shadetabs li {
+    display: inline;
+    margin: 0;
+}
+
+.shadetabs li a {
+    background: #E0E0E0;
+    border: 1px solid #778;
+    color: blue;
+    margin-right: 1px;
+    padding: 1px 7px;
+    position: relative;
+    text-decoration: none;
+    z-index: 1;
+}
+
+/*.shadetabs li a:visited{
+color: blue;
+}*/
+
+.shadetabs li a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.shadetabs li a.selected {
+    background: gray;
+    /*border-bottom-color: #E0E0E0;*/
+    border-bottom-color: gray;
+    /*selected main tab style */
+    color: white;
+    position: relative;
+    top: 0px;
+}
+
+.shadetabs li a.selected:hover { /*selected main tab style */
+    text-decoration: none;
+}
+
+.tabcontent {
+    display: none;
+    font: 11px Verdana;
+}
+
+@media print {
+    .tabcontent { display: block !important; }
+}

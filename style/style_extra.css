@@ -1,0 +1,33 @@
+.thumbnail {
+    position: relative;
+    z-index: 0;
+}
+
+.thumbnail:hover {
+    background-color: transparent;
+    z-index: 50;
+}
+
+.thumbnail span {
+    background-color: lightyellow;
+    border: 1px dashed gray;
+    color: black;
+    left: -1000px;
+    padding: 5px;
+    /*CSS for enlarged image*/
+    position: absolute;
+    text-decoration: none;
+    visibility: hidden;
+}
+
+.thumbnail span img { /*CSS for enlarged image*/
+    border-width: 0;
+    padding: 2px;
+}
+
+.thumbnail:hover span {
+    left: 28px; /*position where enlarged image should offset horizontally */
+    top: -2;
+    /*CSS for enlarged image on hover*/
+    visibility: visible;
+}

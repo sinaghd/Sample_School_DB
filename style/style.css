@@ -1,0 +1,76 @@
+.textform {
+    font-family: Verdana;
+    font-size: 11px;
+}
+
+.textformsmall {
+    font-family: Verdana;
+    font-size: 9px;
+}
+
+.headtext {
+    font-family: Verdana;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.inv_attn {
+    font-family: Century Gothic;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.inv_headtextbig {
+    font-family: Century Gothic;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.inv_headtext {
+    font-family: Century Gothic;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.inv_textform {
+    font-family: Century Gothic;
+    font-size: 20px;
+}
+
+.inv_textnote {
+    font-family: Century Gothic;
+    font-size: 18px;
+}
+
+.inv_footnote {
+    font-family: Century Gothic;
+    font-size: 10px;
+}
+
+.inv_textnotesmall1 {
+    font-family: Century Gothic;
+    font-size: 14px;
+}
+
+.inv_totaltext {
+    font-family: Century Gothic;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.report_headtextbig {
+    font-family: Century Gothic;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.report_textform {
+    font-family: Verdana;
+    font-size: 11px;
+}
+
+.report_headtext {
+    font-family: Verdana;
+    font-size: 11px;
+    font-weight: bold;
+}
