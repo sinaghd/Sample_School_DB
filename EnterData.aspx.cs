@@ -9,59 +9,10 @@ using System.Web.UI.WebControls;
 namespace EnterDataPage
 {
     public partial class EnterDataClass : Page
-    {
-        private readonly string EmergencyEmail_str = String.Empty;
-        private readonly string TutionPaymentNotes_str = String.Empty;
-        private string Address_str = String.Empty;
-        private string AdministrativeNotes_str = String.Empty;
-        private string AllowedFilesList = String.Empty;
-        private string Auth_Id = String.Empty;
-        private string ClassHoursHistory_str = String.Empty;
-        private string Comments_str = String.Empty;
-        private string CountryOfBirth_str = String.Empty;
-        private short CurrentLevel_int;
-        private string Email_str = String.Empty;
-        private string EmergencyAddress_str = String.Empty;
-        private string EmergencyContact_str = String.Empty;
-        private string EmergencyNumber_str = String.Empty;
-        private string FileName_str = String.Empty;
-        private string FirstName_str = String.Empty;
-        private string LastName_str = String.Empty;
-        private string Nationality_str = String.Empty;
-        private string Nickname_str = String.Empty;
-        private string PhoneNumber_str = String.Empty;
-        private string Phone_str = String.Empty;
-        private string ProgramEndDate_str = String.Empty;
-        private string ProgramStartDate_str = String.Empty;
-        private string Status_str = String.Empty;
-        private string StudentID_str = String.Empty;
+    {               
+                 
         private OdbcConnection TempConn;
-        private DataSet TempRs;
-        private DataSet TempRsLevel;
-        private DataSet TempRsStatus;
-        private string TestScoreHistory_str = String.Empty;
-        private string TuitionPaymentDate_str = String.Empty;
-        private string TuitionPaymentNotes_str = String.Empty;
-        private string UrgentNote_str = String.Empty;
-        private string VacationInfo_str = String.Empty;
-        private string WarningLetterInfo_str = String.Empty;
-        private string img_blank = String.Empty;
-        private short intCount = 0;
-        private string isClose = String.Empty;
-        private string isDisabled = String.Empty;
-        private string isUrgent_str = String.Empty;
-        private string level_description = String.Empty;
-        private string level_id = String.Empty;
-        private string refPage = String.Empty;
-        private string status_description = String.Empty;
-        private string status_id = String.Empty;
-        private string strSql = String.Empty;
-        private string strSql_Level = String.Empty;
-        private string strSql_Status = String.Empty;
-        private string style_dir = String.Empty;
-        private string uploadsDirVar = String.Empty;
-
-
+    
         private string dateFormat(string x)
         {
             // Change date format into YYYY-MM-DD
@@ -162,7 +113,7 @@ namespace EnterDataPage
             // Create Javascript closePopup script from server
             var jstext = new StringBuilder();
             jstext.Append("alert('You have inserted data successfully.');");
-            jstext.Append("window.parent.opener.location.reload('" + refPage + "');");
+            jstext.Append("window.parent.opener.location.reload('ViewData.aspx');");
             jstext.Append("window.parent.close();");
 
             AddJS("closePopupAlert", jstext.ToString());
@@ -186,6 +137,38 @@ namespace EnterDataPage
         private void ProcessPostBackData()
         {
             // Process posted data from server-side form    
+            string Address_str = String.Empty;
+            string AdministrativeNotes_str = String.Empty;       
+            string ClassHoursHistory_str = String.Empty;
+            string Comments_str = String.Empty;
+            string CountryOfBirth_str = String.Empty;
+            short CurrentLevel_int;
+            string Email_str = String.Empty;
+            string EmergencyAddress_str = String.Empty;
+            string EmergencyContact_str = String.Empty;
+            string EmergencyNumber_str = String.Empty;
+            string FileName_str = String.Empty;
+            string FirstName_str = String.Empty;
+            string LastName_str = String.Empty;
+            string Nationality_str = String.Empty;
+            string Nickname_str = String.Empty;
+            string PhoneNumber_str = String.Empty;
+            string Phone_str = String.Empty;
+            string ProgramEndDate_str = String.Empty;
+            string ProgramStartDate_str = String.Empty;
+            string Status_str = String.Empty;
+            string StudentID_str = String.Empty;
+            string TestScoreHistory_str = String.Empty;
+            string TuitionPaymentDate_str = String.Empty;
+            string TuitionPaymentNotes_str = String.Empty;
+            string UrgentNote_str = String.Empty;
+            string VacationInfo_str = String.Empty;
+            string WarningLetterInfo_str = String.Empty;
+            string isUrgent_str = String.Empty;            
+            string isClose = "No";
+            string strSql = String.Empty;
+            DataSet TempRs;
+
             if (Convert.ToString(LastName.Value) != "" && Convert.ToString(FirstName.Value) != "")
             {
                 LastName_str = LastName.Value;
@@ -285,8 +268,7 @@ namespace EnterDataPage
                     strSql = strSql + "'" + EmergencyContact_str + "', ";
                     strSql = strSql + "'" + EmergencyAddress_str + "', ";
                     strSql = strSql + "'" + EmergencyNumber_str + "', ";
-                    strSql = strSql + "'" + EmergencyEmail_str + "', ";
-
+                    
                     if (ProgramStartDate_str != "")
                     {
                         strSql = strSql + "'" + ProgramStartDate_str + "', ";
@@ -296,13 +278,13 @@ namespace EnterDataPage
                         strSql = strSql + "'" + ProgramEndDate_str + "', ";
                     }
                     strSql = strSql + "'" + TestScoreHistory_str + "', ";
-                    strSql = strSql + "" + CurrentLevel_int + ", ";
+                    strSql = strSql + "" + CurrentLevel_int.ToString() + ", ";
 
                     if (TuitionPaymentDate_str != "")
                     {
                         strSql = strSql + "'" + TuitionPaymentDate_str + "', ";
                     }
-                    strSql = strSql + "'" + TutionPaymentNotes_str + "', ";
+                    
                     strSql = strSql + "'" + ClassHoursHistory_str + "', ";
                     strSql = strSql + "'" + VacationInfo_str + "', ";
                     strSql = strSql + "'" + WarningLetterInfo_str + "', ";
@@ -340,9 +322,7 @@ namespace EnterDataPage
         private void Page_Load(object sender, EventArgs e)
         {
             // On page load, do the following...
-            isDisabled = "";
-            style_dir = "/style/";
-            img_blank = "/images/blank.gif";
+            string Auth_Id = String.Empty; 
 
             Auth_Id = String.Format("{0}", Session["Auth_Id"]);
 
@@ -350,14 +330,7 @@ namespace EnterDataPage
             {
                 closeWindow();
             }
-
-            if (Auth_Id != "1")
-            {
-                isDisabled = "disabled";
-            }
-            isClose = "No";
-            refPage = "ViewData.aspx";
-
+                        
             ConnectToDB();
 
             // Populate DropDownList objects on page

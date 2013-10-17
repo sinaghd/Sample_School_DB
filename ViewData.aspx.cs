@@ -8,67 +8,10 @@ using System.Web.UI.WebControls;
 namespace ViewDataPage
 {
     public partial class ViewDataClass : Page
-    {
-        private readonly string iStatus = String.Empty;
-        private readonly string iVacation = String.Empty;
-        private DateTime AcceptanceDate = DateTime.FromOADate(0);
-        private string Address = String.Empty;
-        private string Auth_Id = String.Empty;
-        private string ClassHoursHistory = String.Empty;
-        private string Comments = String.Empty;
-        private string CountryOfBirth = String.Empty;
-        private string CurrentLevel = String.Empty;
-        private DateTime DateOfBirth = DateTime.FromOADate(0);
-        private string Email = String.Empty;
-        private string EmergencyAddress = String.Empty;
-        private string EmergencyContact = String.Empty;
-        private string EmergencyNumber = String.Empty;
-        private string FirstName = String.Empty;
-        private string LastName = String.Empty;
-        private string Nationality = String.Empty;
-        private string Nickname = String.Empty;
-        private string Phone = String.Empty;
-        private DateTime ProgramEndDate = DateTime.FromOADate(0);
-        private DateTime ProgramStartDate = DateTime.FromOADate(0);
-        private string Status = String.Empty;
-        private string StudentID = String.Empty;
-        private string StudentImage = String.Empty;
+    {        
+        
         private OdbcConnection TempConn;
-        private DataSet TempRs;
-        private DataSet TempRsVac;
-        private string TestScoreHistory = String.Empty;
-        private DateTime TuitionPaymentDate = DateTime.FromOADate(0);
-        private string TuitionPaymentNotes = String.Empty;
-        private string UrgentNote = String.Empty;
-        private string VacationInfo = String.Empty;
-        private string WarningLetterInfo = String.Empty;
-
-        private string bgColor = String.Empty;
-        private string bigSmileyImg = String.Empty;
-        private string blankImg = String.Empty;
-        private string headText = String.Empty;
-        private string iLevel = String.Empty;
-        private string iLike = String.Empty;
-        private string iNewStatus = String.Empty;
-        private decimal iNo;
-        private string iOldStatus = String.Empty;
-        private string iOrderBy = String.Empty;
-        private string iTransferout = String.Empty;
-        private string iUrgent = String.Empty;
-        private string imgDirVar = String.Empty;
-        private string imgPath = String.Empty;
-        private string isDelete = String.Empty;
         private string isDisabled = String.Empty;
-        private string isLate = String.Empty;
-        private string isTransferout = String.Empty;
-        private string isUrgent = String.Empty;
-        private string isVacation = String.Empty;
-        private string qryValue = String.Empty;
-        private string smallSmileyImg = String.Empty;
-        private string stdid = String.Empty;
-        private string strSql = String.Empty;
-        private string vacSql = String.Empty;
-    
 
         private void ConnectToDB()
         {
@@ -137,6 +80,9 @@ namespace ViewDataPage
         private void SelectNames()
         {
             // Select last names from database in order to create shortcut "first letter" links
+            string strSql = String.Empty;
+            DataSet TempRs;
+
             strSql =
                 "SELECT DISTINCT LEFT(LastName,1) AS LName FROM iic_students_basic  WHERE Status IN (1, 2, 6) ORDER BY LastName ASC";
 
@@ -163,25 +109,42 @@ namespace ViewDataPage
         private void FillTable()
         {
             // Fill HTML table with students' data
-            bigSmileyImg = "/images/smiley-big.gif";
-            smallSmileyImg = "/images/smiley-small.gif";
-            blankImg = "/images/blank.gif";
-            imgPath = "/images/students/";
-
+            string CurrentLevel = String.Empty;
+            string Email = String.Empty;
+            string FirstName = String.Empty;
+            string LastName = String.Empty;
+            string Nickname = String.Empty;
+            DateTime ProgramStartDate = DateTime.FromOADate(0);
+            DateTime TuitionPaymentDate = DateTime.FromOADate(0);
+            string Status = String.Empty;
+            string StudentID = String.Empty;
+            string StudentImage = String.Empty;
+            string UrgentNote = String.Empty;
+            string bgColor = String.Empty;
+            string iLevel = String.Empty;
+            string iLike = String.Empty;
+            string iOrderBy = String.Empty;
+            string iTransferout = String.Empty;
+            string iUrgent = String.Empty;
+            string isTransferout = String.Empty;
+            string isUrgent = String.Empty;
+            string isVacation = String.Empty;
+            string bigSmileyImg = "/images/smiley-big.gif";
+            string smallSmileyImg = "/images/smiley-small.gif"; 
+            string imgPath = "/images/students/";
+            decimal iNo = 1;
+            string vacSql = String.Empty;
+            DataSet TempRs;
+            DataSet TempRsVac;            
+            
             iLike = String.Format("{0}", Request.Form["ilike"]);
             iLevel = String.Format("{0}", Request.Form["level"]);
             iUrgent = String.Format("{0}", Request.Form["urgent"]);
             iTransferout = String.Format("{0}", Request.Form["transferout"]);
             iOrderBy = String.Format("{0}", Request.Form["orderby"]);
 
-            ProcessRequestFormData(iLike, iLevel, iUrgent, iTransferout, iOrderBy);
-
-            iNo = 1;
-            if (iStatus != "0" || iStatus != "2")
-            {
-                iOldStatus = "2";
-            }
-
+            TempRs = ProcessRequestFormData(iLike, iLevel, iUrgent, iTransferout, iOrderBy);
+                        
             // Loop through students, extracting important information for table
             foreach (DataRow iteration_row_3 in TempRs.Tables[0].Rows)
             {
@@ -214,8 +177,6 @@ namespace ViewDataPage
                     Email = Convert.ToString(iteration_row_3["Email"]);
                 }
 
-                CountryOfBirth = Convert.ToString(iteration_row_3["CountryOfBirth"]);
-
                 if (!(DBNull.Value.Equals(iteration_row_3["ProgramStartDate"])))
                 {
                     ProgramStartDate = Convert.ToDateTime(iteration_row_3["ProgramStartDate"]);
@@ -230,11 +191,6 @@ namespace ViewDataPage
                 Status = Convert.ToInt16(iteration_row_3["Status"]).ToString();
                 isUrgent = Convert.ToInt16(iteration_row_3["isUrgent"]).ToString();
                 isTransferout = Convert.ToInt16(iteration_row_3["isTransferout"]).ToString();
-
-                if (!(DBNull.Value.Equals(iteration_row_3["ProgramEndDate"])))
-                {
-                    ProgramEndDate = Convert.ToDateTime(iteration_row_3["ProgramEndDate"]);
-                }
 
                 // Extract information related to student's vacation history    
                 vacSql = "SELECT * FROM iic_vacation a, iic_students_basic b ";
@@ -322,26 +278,7 @@ namespace ViewDataPage
 
                     UrgentNote = "";
                 }
-
-                if (Convert.ToInt16(Double.Parse(iOldStatus)) != Convert.ToInt16(Double.Parse(Status)))
-                {
-                    if (Status == "3")
-                    {
-                        iOldStatus = "3";
-                        iNo = 1;
-                    }
-                    else if (Status == "4")
-                    {
-                        iOldStatus = "4";
-                        iNo = 1;
-                    }
-                    else if (Status == "5")
-                    {
-                        iOldStatus = "5";
-                        iNo = 1;
-                    }
-                }
-
+                
                 // Generate rows and cells.           
                 string BlankCellStr =
                     "<img src='/images/blank.gif' width='1' height='1' style='background-color:white'>";
@@ -396,18 +333,18 @@ namespace ViewDataPage
             // Determine if student is late on payment, and if so by how many days
             string isLate = String.Empty;
 
-            if (((TuitionPaymentDate - DateTime.Today).Days <= 0) && ((TuitionPaymentDate - DateTime.Today).Days > -8))
+            if (((TuitionPaymentDateTime - DateTime.Today).Days <= 0) && ((TuitionPaymentDateTime - DateTime.Today).Days > -8))
             {
-                if ((int) TuitionPaymentDate.DayOfWeek == 1)
+                if ((int) TuitionPaymentDateTime.DayOfWeek == 1)
                 {
-                    isLate = " (" + ((TuitionPaymentDate - DateTime.Today).Days + 5) + ")";
+                    isLate = " (" + ((TuitionPaymentDateTime - DateTime.Today).Days + 5) + ")";
                 }
                 else
                 {
-                    isLate = " (" + ((TuitionPaymentDate - DateTime.Today).Days + 7) + ")";
+                    isLate = " (" + ((TuitionPaymentDateTime - DateTime.Today).Days + 7) + ")";
                 }
             }
-            else if ((TuitionPaymentDate - DateTime.Today).Days <= -8)
+            else if ((TuitionPaymentDateTime - DateTime.Today).Days <= -8)
             {
                 isLate = "<font color='red'> (L)</font>";
             }
@@ -445,11 +382,11 @@ namespace ViewDataPage
         }
 
 
-        private void ProcessRequestFormData(string iLike, string iLevel, string iUrgent, string iTransferout,
+        private DataSet ProcessRequestFormData(string iLike, string iLevel, string iUrgent, string iTransferout,
             string iOrderBy)
         {
             // Fill dataset with specific student information 
-            strSql = "SELECT * FROM iic_students_basic";
+            string strSql = "SELECT * FROM iic_students_basic";
 
             if (iLike != "")
             {
@@ -466,11 +403,7 @@ namespace ViewDataPage
             else if (iTransferout != "")
             {
                 strSql = strSql + " WHERE isTransferout = '" + iTransferout + "' AND Status IN (1,2,6)";
-            }
-            else if (iStatus != "")
-            {
-                strSql = strSql + " WHERE Status IN (" + iStatus + ")";
-            }
+            }            
             else
             {
                 strSql = strSql + " WHERE Status IN (1,2,6)";
@@ -479,32 +412,24 @@ namespace ViewDataPage
             if (iOrderBy != "")
             {
                 strSql = strSql + " ORDER BY " + iOrderBy + ", LastName ASC, FirstName ASC";
-            }
-            else if (iStatus != "")
-            {
-                strSql = strSql + " ORDER BY Status, LastName ASC, FirstName ASC";
-            }
+            }           
             else
             {
                 strSql = strSql + " ORDER BY LastName ASC, FirstName ASC";
-            }
+            }            
 
-            if (iVacation != "")
-            {
-                strSql = "SELECT DISTINCT * FROM iic_vacation a, iic_students_basic b ";
-                strSql = strSql + "WHERE a.studentid = b.studentid ";
-                strSql = strSql + "AND a.start_date <= CURDATE() ";
-                strSql = strSql + "AND CURDATE() <= a.end_date ";
-                strSql = strSql + "ORDER BY LastName ASC, FirstName ASC";
-            }
-
-            TempRs = TempRsFilled(strSql);
+            ProcessRequestFormData = TempRsFilled(strSql);
         }
 
 
         private void Page_Load(object sender, EventArgs e)
         {            
-            // On page load, do the following...  
+            // On page load, do the following...
+            string Auth_Id = String.Empty;  
+            string isDelete = String.Empty;
+            string stdid = String.Empty;
+            string strSql = String.Empty;
+
             ConnectToDB();
 
             Session["TimeOut"] = 30;
@@ -526,8 +451,7 @@ namespace ViewDataPage
             if (String.Format("{0}", Request.ServerVariables["REQUEST_METHOD"]) == "POST")
             {
                 isDelete = String.Format("{0}", Request.Form["isDelete"]);
-                stdid = String.Format("{0}", Request.Form["stdid"]);
-                imgDirVar = "c:\\Inetpub\\wwwroot\\images\\students";
+                stdid = String.Format("{0}", Request.Form["stdid"]);                
 
                 if (isDelete == "yes" && stdid != "")
                 {

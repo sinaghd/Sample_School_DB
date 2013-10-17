@@ -9,16 +9,8 @@ namespace DefaultPage
     public class DefaultClass : Page
 
     {
-        private OdbcConnection TempConn;
-        private string authorizeid = String.Empty;
-        private string dNow = String.Empty;
-        private string passcode = String.Empty;
-        private string password = String.Empty;
-        private string refPage = String.Empty;
-        private string strSql = String.Empty;
-        private string username = String.Empty;
-
-
+        private OdbcConnection TempConn;           
+        
         private void errMsg()
         {
             // Error message for user who fails credentials check
@@ -69,13 +61,10 @@ namespace DefaultPage
         private void Page_Load(object sender, EventArgs e)
         {
             // On page load, do the folllowing...
-            refPage = "ViewData.aspx";
-            strSql = "";
-            username = "";
-            password = "";
-            authorizeid = "";
-            passcode = "key:sample_key";
-            dNow = "";
+            string username = String.Empty;            
+            string password = String.Empty;         
+            string passcode = "key:sample_key";
+            string strSql = String.Empty;                    
 
             ConnectToDB();
 
@@ -102,10 +91,7 @@ namespace DefaultPage
 
                         Session["username"] = username;
                         Session["Auth_Id"] = TempRs.Tables[0].Rows[0]["authorize_id"];
-                        Session["TimeOut"] = 30;
-
-
-                        TempConn.Close();
+                        Session["TimeOut"] = 30;                        
 
                         Response.Redirect("ViewData.aspx");
                     }
@@ -117,9 +103,7 @@ namespace DefaultPage
                 else
                 {
                     errMsg();
-                }
-
-                TempConn.Close();
+                }                
             }
         }
     }

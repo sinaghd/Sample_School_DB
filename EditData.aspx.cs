@@ -10,13 +10,9 @@ using System.Web.UI.WebControls;
 namespace EditDataPage
 {
     public partial class EditDataClass : Page
-    {
-        private readonly string bgColor = String.Empty;
-
+    {      
         private string Address = String.Empty;
-        private string AdministrativeNotes = String.Empty;
-        private string AllowedFilesList = String.Empty;
-        private string Auth_Id = String.Empty;
+        private string AdministrativeNotes = String.Empty;        
         private string ClassHoursHistory = String.Empty;
         private string Comments = String.Empty;
         private string CountryOfBirth = String.Empty;
@@ -27,8 +23,6 @@ namespace EditDataPage
         private string EmergencyEmail = String.Empty;
         private string EmergencyNumber = String.Empty;
         private string ExitScoreHistory = String.Empty;
-        private string FilePath = String.Empty;
-        private object FiletoDelete = null;
         private string FirstName = String.Empty;
         private string LastName = String.Empty;
         private string MedLeaveEndDate = String.Empty;
@@ -43,9 +37,7 @@ namespace EditDataPage
         private string ProgressDate = String.Empty;
         private short ProgressLevel;
         private string Status = String.Empty;
-        private string StudentImageFilename = String.Empty;
-        private OdbcConnection TempConn;
-        private DataSet TempRs;
+        private string StudentImageFilename = String.Empty;    
         private string TestScoreHistory = String.Empty;
         private string TuitionPaymentDate = String.Empty;
         private string TuitionPaymentNotes = String.Empty;
@@ -55,33 +47,16 @@ namespace EditDataPage
         private string VacationStartDate = String.Empty;
         private short VacationWeeks;
         private string WarningLetterInfo = String.Empty;
-        private string blankImg = "/images/blank.gif";
+        private OdbcConnection TempConn;        
         private double earnedvac;
-        private string iRecord = String.Empty;
-        private string imgDelete = "/images/record_delete.gif";
-        private string imgEdit = "/images/record_edit.gif";
-        private int intCount = 0;
-        private string isClose = String.Empty;
-        private string isDelete = String.Empty;
-        private string isDeleteImage = String.Empty;
-        private string isDisabled = String.Empty;
-        private string isEdit = String.Empty;
-        private string isSelected = String.Empty;
-        private string isTransferout = String.Empty;
-        private string isTransferoutCheck = String.Empty;
-        private string isUrgent = String.Empty;
-        private string isUrgentCheck = String.Empty;
-        private string refPage = String.Empty;
-        private string refPopPage = String.Empty;
         private string remainvac = String.Empty;
+        private string isDisabled = String.Empty;
+        private string isTransferout = String.Empty;
+        private string isUrgent = String.Empty;
+        private string refPopPage = String.Empty;
         private string stdid = String.Empty;
         private string stdweek = String.Empty;
-        private string strSql = String.Empty;
-        private string strSql_Status = String.Empty;
-        private string style_dir = "/style/";
-        private string uploadsDirVar = "\\images\\students";
-        private int weekleft = 0;
-
+        
 
         private void ConnectToDB()
         {
@@ -122,9 +97,11 @@ namespace EditDataPage
         }
 
 
-        private void queryRecord(string stdid)
+        private void queryRecord()
         {
             // Retrieve student data from database record
+            string strSql = String.Empty;
+            DataSet TempRs;
             strSql = "SELECT * FROM iic_students_basic WHERE StudentID=" + stdid;
             TempRs = TempRsFilled(strSql);
 
@@ -242,10 +219,18 @@ namespace EditDataPage
         private void ProcessPostBackData()
         {
             // Process posted data from server-side form
+            string isClose = = "No";
+            string iRecord = String.Empty;
+            string isDelete = String.Empty;
+            string isDeleteImage = String.Empty;
+            string isEdit = String.Empty;
+            string strSql = String.Empty;
+            string uploadsDirVar = "\\images\\students";
+
             if (String.Format("{0}", Request.ServerVariables["REQUEST_METHOD"]) != "POST")
             {
                 stdid = String.Format("{0}", Request.QueryString["stdid"]).Trim();
-                queryRecord(stdid);
+                queryRecord();
             }
             else
             {
@@ -262,9 +247,9 @@ namespace EditDataPage
 
                     AddJS("VacationDeletedPopupAlert", "alert('The vacation record has been deleted.');");
 
-                    refPopPage = "EditData.aspx?auth_id=" + Auth_Id + "&stdid=" + stdid;
+                    refPopPage = "EditData.aspx?stdid=" + stdid;
                     isClose = "No";
-                    queryRecord(stdid);
+                    queryRecord();
                 }
                 else if (isEdit != "")
                 {
@@ -274,7 +259,7 @@ namespace EditDataPage
 
                     refPopPage = "EditData.aspx?stdid=" + stdid;
                     isClose = "No";
-                    queryRecord(stdid);
+                    queryRecord();
                 }
                 else
                 {
@@ -383,8 +368,7 @@ namespace EditDataPage
                             strSql = strSql + "WarningLetterInfo='" + WarningLetterInfo + "', ";
                             strSql = strSql + "Comments='" + Comments + "', ";
                         }
-                        isDeleteImage = "";
-
+                        
                         if (Convert.ToString(Request.Form["isDeleteImage"]) == "on")
                         {
                             strSql = strSql + "StudentImage='', ";
@@ -536,7 +520,7 @@ namespace EditDataPage
             // Create Javascript closePopup script from server
             var jstext = new StringBuilder();
             jstext.Append("alert(\"You have updated data successfully.');");
-            jstext.Append("window.parent.opener.location.reload('" + refPage + "');");
+            jstext.Append("window.parent.opener.location.reload('ViewData.aspx');");
             jstext.Append("window.parent.close();");
 
             AddJS("ClosePopupWindow", jstext.ToString());
@@ -555,8 +539,9 @@ namespace EditDataPage
         // Calculate total number of vacation weeks, number of weeks earned, and number of weeks remaining
 
         // Determine study period
-            stdweek = "";
+            int weekleft = 0;            
             DataSet TempRsStd = null;
+            stdweek = "";
 
             string stdSql =
                 "SELECT lastname, firstname, FLOOR( DATEDIFF( CURDATE( ) , PROGRAMSTARTDATE ) /7 ) AS weeks ";
@@ -720,8 +705,7 @@ namespace EditDataPage
         private TableRow TableOpeningRow()
         {
             // Create a standard opening table row
-            var TempTR = new TableRow();
-            TempTR.Style["background-color"] = bgColor;
+            var TempTR = new TableRow();            
             TempTR.Style["color"] = "#000000";
             return TempTR;
         }
@@ -744,6 +728,9 @@ namespace EditDataPage
         private void PopulateForm()
         {
             // Populate HTML form with student data
+            string imgEdit = "/images/record_edit.gif";
+            string strSql = String.Empty;
+            DataSet TempRs;
             TableRow StdTR = null;
 
             StudentID.Value = stdid;
@@ -858,6 +845,8 @@ namespace EditDataPage
         private void Page_Load(object sender, EventArgs e)
         {
             // On page load, do the following...
+            string Auth_Id = String.Empty;
+
             ConnectToDB();
 
             Auth_Id = String.Format("{0}", Session["Auth_Id"]);
@@ -870,16 +859,12 @@ namespace EditDataPage
             if (Auth_Id != "1")
             {
                 isDisabled = "disabled";
-            }
-            isClose = "No";
-            isUrgentCheck = "";
-            isTransferoutCheck = "";
-            refPage = "ViewData.aspx";
-
+            }                           
+          
             if (String.Format("{0}", Request.ServerVariables["REQUEST_METHOD"]) != "POST")
             {
                 stdid = String.Format("{0}", Request.QueryString["stdid"]).Trim();
-                queryRecord(stdid);
+                queryRecord();
             }
 
             PopulateForm();

@@ -10,11 +10,10 @@ namespace ViewDetailDataPage
 {
     public partial class ViewDetailDataClass : Page
     {
-        private readonly string bgColor = String.Empty;
-        private string AcceptanceDate = String.Empty;
+        
+        
         private string Address = String.Empty;
-        private string AdministrativeNotes = String.Empty;
-        private string Auth_Id = String.Empty;
+        private string AdministrativeNotes = String.Empty;         
         private string ClassHoursHistory = String.Empty;
         private string Comments = String.Empty;
         private string CountryOfBirth = String.Empty;
@@ -32,37 +31,18 @@ namespace ViewDetailDataPage
         private string PhoneNumber = String.Empty;
         private string ProgramEndDate = String.Empty;
         private string ProgramStartDate = String.Empty;
-        private string StudentImage = String.Empty;
-        private OdbcConnection TempConn;
-        private DataSet TempRs;
-        private DataSet TempRsStd;
-        private DataSet TempRsVac;
+        private string StudentImage = String.Empty; 
         private string TestScoreHistory = String.Empty;
         private string TuitionPaymentDate = String.Empty;
-        private string TuitionPaymentNotes = String.Empty;
-        private string VacationInfo = String.Empty;
-        private string WarningLetterInfo = String.Empty;
-        private string blankImg = String.Empty;
-        private double earnedvac;
-        private string iColor = String.Empty;
-        private int iCount;
-        private string iRecord = String.Empty;
-        private string imgDelete = String.Empty;
-        private string imgPath = String.Empty;
-        private string isDelete = String.Empty;
-        private float random_number;
+        private string TuitionPaymentNotes = String.Empty;        
+        private string WarningLetterInfo = String.Empty;        
         private string remainvac = String.Empty;
-        private string smileyImg = String.Empty;
         private string status = String.Empty;
-        private string stdSql = String.Empty;
+        private double earnedvac;       
         private string stdid = String.Empty;
         private string stdweek = String.Empty;
-        private string strSql = String.Empty;
-        private string vacSql = String.Empty;
-        private string vacweek = String.Empty;
-        private int weekleft;
-
-            
+        private OdbcConnection TempConn;
+        
 
         private string dateSlashFormat(string x)
         {
@@ -82,9 +62,11 @@ namespace ViewDetailDataPage
         }
 
 
-        private string getStatusName(string status)
+        private string getStatusName()
         {
-            // Get description of student status            
+            // Get description of student status   
+            DataSet TempRs;
+
             TempRs = TempRsFilled("SELECT status_description FROM iic_students_status WHERE status_id=" + status);
 
             foreach (DataRow iteration_row in TempRs.Tables[0].Rows)
@@ -97,7 +79,9 @@ namespace ViewDetailDataPage
 
         private string getLevelName(string level)
         {
-            // Get description of student level            
+            // Get description of student level     
+            DataSet TempRs;
+
             TempRs = TempRsFilled("SELECT level_description FROM iic_students_level WHERE level_id=" + level);
 
             foreach (DataRow iteration_row in TempRs.Tables[0].Rows)
@@ -169,7 +153,13 @@ namespace ViewDetailDataPage
 
         private void CalculateRemainingVacation()
         {
-            // Calculate remaining number of weeks of earned vacation
+            // Calculate remaining number of weeks of earned vacation           
+            string vacSql = String.Empty;
+            string vacweek = String.Empty;
+            int weekleft;
+            int iCount;
+            DataSet TempRsVac;
+
             vacSql = "SELECT SUM(weeks) as weeks FROM iic_vacation WHERE StudentID = " + stdid;
 
             TempRsVac = TempRsFilled(vacSql);
@@ -271,6 +261,15 @@ namespace ViewDetailDataPage
         private void ProcessFormData()
         {
             // Process form data
+            string iRecord = String.Empty;
+            string isDelete = String.Empty;
+            string imgPath = "/images/students/";
+            string smileyImg = "/images/smiley-big.gif"; 
+            string stdSql = String.Empty;
+            string strSql = String.Empty;
+            DataSet TempRs;
+            DataSet TempRsStd;
+
             if (String.Format("{0}", Request.ServerVariables["REQUEST_METHOD"]) == "POST")
             {
                 stdid = String.Format("{0}", Request.Form["stdid"]);
@@ -318,16 +317,14 @@ namespace ViewDetailDataPage
                 Nationality = Convert.ToString(iteration_row["Nationality"]);
                 EmergencyContact = Convert.ToString(iteration_row["EmergencyContact"]);
                 EmergencyAddress = Convert.ToString(iteration_row["EmergencyAddress"]);
-                EmergencyNumber = Convert.ToString(iteration_row["EmergencyNumber"]);
-                AcceptanceDate = dateSlashFormat(Convert.ToString(iteration_row["AcceptanceDate"]));
+                EmergencyNumber = Convert.ToString(iteration_row["EmergencyNumber"]);                
                 ProgramStartDate = dateSlashFormat(Convert.ToString(iteration_row["ProgramStartDate"]));
                 ProgramEndDate = dateSlashFormat(Convert.ToString(iteration_row["ProgramEndDate"]));
                 TestScoreHistory = Convert.ToString(iteration_row["TestScoreHistory"]);
                 CurrentLevel = Convert.ToString(iteration_row["CurrentLevel"]);
                 TuitionPaymentDate = dateSlashFormat(Convert.ToString(iteration_row["TuitionPaymentDate"]));
                 TuitionPaymentNotes = Convert.ToString(iteration_row["TuitionPaymentNotes"]);
-                ClassHoursHistory = Convert.ToString(iteration_row["ClassHoursHistory"]);
-                VacationInfo = Convert.ToString(iteration_row["VacationInfo"]);
+                ClassHoursHistory = Convert.ToString(iteration_row["ClassHoursHistory"]);               
                 WarningLetterInfo = Convert.ToString(iteration_row["WarningLetterInfo"]);
                 Comments = Convert.ToString(iteration_row["Comments"]);
                 AdministrativeNotes = Convert.ToString(iteration_row["AdministrativeNotes"]);
@@ -359,8 +356,7 @@ namespace ViewDetailDataPage
         private TableRow TableOpeningRow()
         {
            // Generate a standard opening table row 
-            var TempTR = new TableRow();
-            TempTR.Style["background-color"] = bgColor;
+            var TempTR = new TableRow();            
             TempTR.Style["color"] = "#000000";
             return TempTR;
         }
@@ -382,8 +378,12 @@ namespace ViewDetailDataPage
 
         private void OutputToTable()
         {
-            //Add basic student information values to table cells
+            //Add basic student information values to table cells            
+            string iColor = String.Empty;
+            string strSql = String.Empty;
+            string imgDelete = "/images/record_delete.gif";
             TableRow StdTR = null;
+            DataSet TempRs;
             
             StdImage.ImageUrl = StudentImage;
             StudentID.Value = stdid;
@@ -397,7 +397,7 @@ namespace ViewDetailDataPage
             }
             else
             {
-                status = getStatusName(status);
+                status = getStatusName();
                 iColor = "blue";
             }
 
@@ -417,7 +417,7 @@ namespace ViewDetailDataPage
             StdLevel.Controls.Add(new LiteralControl(getLevelName(CurrentLevel)));
             StdTuitionDate.Controls.Add(new LiteralControl(TuitionPaymentDate));
             StdWeeks.Controls.Add(new LiteralControl(stdweek + " Week(s)"));
-            StdEarnedVacation.Controls.Add(new LiteralControl(earnedvac + " Week(s)"));
+            StdEarnedVacation.Controls.Add(new LiteralControl(earnedvac.ToString() + " Week(s)"));
             StdRemainingVacation.Controls.Add(new LiteralControl(remainvac + " Week(s)"));
             StdNotifiedPayment.Controls.Add(new LiteralControl(NotifyPayment));
 
@@ -484,7 +484,6 @@ namespace ViewDetailDataPage
                 StdTable1.Rows.Add(StdTR);
             }
 
-
            //Add rows to vacation table
             strSql = "SELECT * FROM iic_vacation WHERE StudentID=" + stdid + " ORDER BY start_date DESC";
 
@@ -547,6 +546,8 @@ namespace ViewDetailDataPage
         private void Page_Load(object sender, EventArgs e)
         {
            // On page load, do the following..
+           string Auth_Id = String.Empty;
+
             ConnectToDB();
 
             Auth_Id = String.Format("{0}", Session["Auth_Id"]);
@@ -555,11 +556,7 @@ namespace ViewDetailDataPage
             {
                 closeWindow();
             }
-            smileyImg = "/images/smiley-big.gif";
-            blankImg = "/images/blank.gif";
-            imgPath = "/images/students/";
-            imgDelete = "/images/record_delete.gif";
-
+                  
             ProcessFormData();
 
             OutputToTable();
